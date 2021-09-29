@@ -22,7 +22,6 @@ def get_dask_sql_context():
 
     return Context()
 
-# global choosed_table
 
 dask_sql_context = get_dask_sql_context()
 st.sidebar.title("Dask-SQL")
@@ -75,7 +74,6 @@ with st.sidebar.expander("⚙️ Settings"):
 
 
 
-# if choosed_table is not None:
 sql = st_ace(
     placeholder="Write the SQL statements",
     language="sql",
