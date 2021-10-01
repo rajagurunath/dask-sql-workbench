@@ -7,6 +7,7 @@ from dask_sql import java
 from containers import get_last_few_queries,query_history
 from udfs import register_udf,udf_help_text
 # from settings import get_settings
+
 st.set_page_config(layout="wide")
 
 @st.cache(allow_output_mutation=True)
