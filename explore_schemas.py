@@ -3,6 +3,7 @@ from connections import get_dask_sql_context
 import streamlit as st
 from defaults import SHOW_TABLE_ROWS
 import pandas as pd
+import inspect
 
 dask_sql_context = get_dask_sql_context()
 
@@ -74,7 +75,11 @@ def explore_schema():
             selected_func = st.session_state['selected_func']
             st.write(selected_func)
             st.table(pd.DataFrame(dask_sql_context.schema[selected_schema].function_lists).astype(str))
-            st.code(dask_sql_context.schema[selected_schema].functions[selected_func])
+            funcObj = dask_sql_context.schema[selected_schema].functions[selected_func]
+            # inspect will not work on the func where the func are defined are string
+            # funcStr = inspect.getsource(funcObj)
+            # st.code(funcStr)
+            st.code(funcObj)
         
         elif st.session_state["on_changed_called_on"] == "models":
             model = st.session_state['selected_model']
