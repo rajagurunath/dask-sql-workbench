@@ -41,3 +41,16 @@ CREATE EXPERIMENT my_exp WITH (
     ) AS (
             SELECT * FROM enriched_iris
         )
+
+# functions
+CREATE OR REPLACE TABLE enriched_iris AS (
+    SELECT 
+        sepal_length, sepal_width, petal_length, petal_width,
+        CASE 
+            WHEN species = 'setosa' THEN 0 ELSE CASE 
+            WHEN species = 'versicolor' THEN 1
+            ELSE 2 
+        END END AS "species", 
+        IRIS_VOLUME(sepal_length, sepal_width) AS volume
+    FROM iris 
+)

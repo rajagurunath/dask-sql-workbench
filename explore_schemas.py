@@ -2,6 +2,7 @@
 from connections import get_dask_sql_context
 import streamlit as st
 from defaults import SHOW_TABLE_ROWS
+import pandas as pd
 
 dask_sql_context = get_dask_sql_context()
 
@@ -70,7 +71,10 @@ def explore_schema():
             st.table(dask_sql_context.schema[selected_schema].tables[st.session_state['selected_table']].df.head(SHOW_TABLE_ROWS))
         
         elif st.session_state["on_changed_called_on"] == "func":
-            st.write("functions")
+            selected_func = st.session_state['selected_func']
+            st.write(selected_func)
+            st.table(pd.DataFrame(dask_sql_context.schema[selected_schema].function_lists).astype(str))
+            st.code(dask_sql_context.schema[selected_schema].functions[selected_func])
         
         elif st.session_state["on_changed_called_on"] == "models":
             model = st.session_state['selected_model']
