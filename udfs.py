@@ -1,7 +1,6 @@
 
 import streamlit as st
 from streamlit_ace import st_ace
-import streamlit as st
 from utils import get_settings_default
 from connections import get_dask_sql_context
 
@@ -11,8 +10,15 @@ udf_help_text = "To more about how to define Python UDF, \
 dask_sql_context = get_dask_sql_context()
 
 def register_udf(completefn,sql_context):
-    cfn = compile(completefn,'kernel','exec')
-    eval(cfn,{"c":sql_context})
+    try:
+        import numpy as np
+        import pandas as pd
+        cfn = compile(completefn,'kernel','exec')
+        eval(cfn,{"__builtins__": {}},{"c":sql_context,"np":np,"pd":pd})
+    except ImportError as e:
+        st.error(f"Import statements are minimized for security purpose! {e}")
+    except Exception as e:
+        st.error(e)
 
 def create_pyUDF():
     theme,Keybinding,font_size,tab_size = get_settings_default(
