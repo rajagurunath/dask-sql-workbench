@@ -7,6 +7,7 @@ from settings import settings
 from sql_explorer import write_sql
 from connections import connection_page
 from udfs import create_pyUDF
+from visualizer import visualizer_page
 
 user_want_to= st.sidebar.radio(
     "Dask-SQL",
@@ -22,7 +23,6 @@ user_want_to= st.sidebar.radio(
 )
 
 
-
 if user_want_to == "Write SQL":
     write_sql()
 elif user_want_to == "Settings":
@@ -33,3 +33,5 @@ elif user_want_to == "Connections":
     connection_page()
 elif user_want_to == "Create Python UDF":
     create_pyUDF()
+elif user_want_to == "Visualizer":
+    visualizer_page()
