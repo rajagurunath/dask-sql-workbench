@@ -49,6 +49,8 @@ def visualize_table(table):
     st.code(python_code,language="python")
     if python_code:
         st.write(code_visualizer(python_code,dask_sql_context,table))
+    
+    
 
 
 def visualizer_page():
@@ -68,12 +70,28 @@ def visualizer_page():
 
     viz_type = st.selectbox("What you want to do with the data ?" ,options= ["custom viz","profile"])
     
-    dataframe = dask_sql_context.schema[selected_schema].tables[selected_table].df.head(1000)
-
-    if viz_type == "profile":
-        pr = ProfileReport(dataframe)#.profile_report()
-        st_profile_report(pr)
-    elif viz_type == "custom viz":
-        visualize_table(dataframe)
+    if selected_table is None:
+        st.warning("No Tables Detected, Please create/select one to proceed further")
     else:
-        raise Exception("This should not happen !!!")
+        dataframe = dask_sql_context.schema[selected_schema].tables[selected_table].df.head(1000)
+
+        if viz_type == "profile":
+            pr = ProfileReport(dataframe)#.profile_report()
+            st_profile_report(pr)
+        elif viz_type == "custom viz":
+            visualize_table(dataframe)
+        else:
+            raise Exception("This should not happen !!!")
+
+    with st.expander("HELP 💡"):
+        st.subheader("Example Custom Viz snippets")
+        st.code(
+            """
+sns.scatterplot(
+    data=df,
+    x="sepal_length",
+    y="sepal_width",
+    hue="species",
+)
+            """
+        )

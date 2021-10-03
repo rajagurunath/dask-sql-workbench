@@ -9,6 +9,14 @@ dask_sql_context = get_dask_sql_context()
 
 
 def write_sql():
+    st.markdown("""
+    ### Dask-SQL Workbench
+
+    Use SQL to create Tables, Views,ML Models and Experiments etc.
+    
+    """
+    )
+
     theme,Keybinding,font_size,tab_size = get_settings_default(
             ["theme","Keybinding","font_size","tab_size"]
             )
@@ -23,7 +31,7 @@ def write_sql():
     key="ace",
     )
 
-    explain = st.button(label="Explain")
+    explain = st.button(label="Explain",help="Explain the Query plan to write a Optimized SQL")
 
     if sql:
         query_history.append(sql)

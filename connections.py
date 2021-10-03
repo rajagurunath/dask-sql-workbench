@@ -8,7 +8,12 @@ import coiled
 from dask.distributed import Client,LocalCluster
 import os
 import dask
-dask.config.set({"coiled.token":st.secrets['token']})
+
+
+
+if "token" in os.environ:
+	token = os.environ.get('token',None)
+	dask.config.set({"coiled.token":token})
 
 @st.experimental_singleton()
 def get_coiled_client():
@@ -73,12 +78,21 @@ def coiled_dask_cluster():
 		cluster_state.write("Starting or connecting to Coiled cluster...")
 		client = get_coiled_client()
 
-	cluster_state.write(f"Coiled cluster is up! ({client.dashboard_link})")
-
+	cluster_state.write(f"Coiled cluster is up and Running..! ({client.dashboard_link})")
+	st.success("Dask cluster created successfully")
+	st.balloons()
 	return client
 
 
 def connection_page():
+	st.markdown(
+	"""
+	### Creates Connection to Dask cluster
+
+	1. Connect or Create to local Dask Cluster (was disabled in streamlit share)
+	2. Connect or Create to Coiled Dask Cluster
+	"""
+)
 	local_or_coiled = st.radio("Do you want to connect to local \
 								 dask cluster or coiled dask cluster",
 								 options=["local-reuse","local-create","coiled-create"],

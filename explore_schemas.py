@@ -8,6 +8,18 @@ import inspect
 dask_sql_context = get_dask_sql_context()
 
 def explore_schema():
+
+    st.markdown(
+        """
+        ### Explore whole anatomy of the dask-sql
+
+        1. Tables/views
+        2. Models
+        3. Experiments
+        4. Custom Created 🐍 Functions 
+        """
+    )
+
     schemas = dask_sql_context.schema.keys()
 
     selected_schema = st.selectbox(
@@ -16,11 +28,15 @@ def explore_schema():
 
     )
 
-    tables = dask_sql_context.schema[selected_schema].tables
-    experiments = dask_sql_context.schema[selected_schema].experiments
-    models = dask_sql_context.schema[selected_schema].models
-    funcs = dask_sql_context.schema[selected_schema].functions
+    tables = list(dask_sql_context.schema[selected_schema].tables)
+    experiments = list(dask_sql_context.schema[selected_schema].experiments)
+    models = list(dask_sql_context.schema[selected_schema].models)
+    funcs = list(dask_sql_context.schema[selected_schema].functions)
 
+    tables.insert(0,None)
+    funcs.insert(0,None)
+    experiments.insert(0,None)
+    models.insert(0,None)
     col1, col2,col3,col4 = st.columns(4)
 
     placeholder = st.empty()
@@ -66,34 +82,102 @@ def explore_schema():
         key="selected_experiment"
         )
 
+    
     if "on_changed_called_on" in st.session_state:
         if st.session_state["on_changed_called_on"] =="tables":
-            st.write(st.session_state['selected_table'])
-            st.table(dask_sql_context.schema[selected_schema].tables[st.session_state['selected_table']].df.head(SHOW_TABLE_ROWS))
+            selected_table = st.session_state['selected_table']
+            if selected_table is not None:
+                st.write(selected_table)
+                st.table(dask_sql_context.schema[selected_schema].tables[selected_table].df.head(SHOW_TABLE_ROWS))
         
         elif st.session_state["on_changed_called_on"] == "func":
             selected_func = st.session_state['selected_func']
-            st.write(selected_func)
-            st.table(pd.DataFrame(dask_sql_context.schema[selected_schema].function_lists).astype(str))
-            funcObj = dask_sql_context.schema[selected_schema].functions[selected_func]
-            # inspect will not work on the func where the func are defined are string
-            # funcStr = inspect.getsource(funcObj)
-            # st.code(funcStr)
-            st.code(funcObj)
+            if selected_func is not None:
+                st.write(selected_func)
+                st.table(pd.DataFrame(dask_sql_context.schema[selected_schema].function_lists).astype(str))
+                funcObj = dask_sql_context.schema[selected_schema].functions[selected_func]
+                # inspect will not work on the func where the func are defined are string
+                # funcStr = inspect.getsource(funcObj)
+                # st.code(funcStr)
+                st.code(funcObj)
         
         elif st.session_state["on_changed_called_on"] == "models":
             model = st.session_state['selected_model']
-            st.write(f"Describe {model}")
-            # st.write(dask_sql_context.schema[selected_schema].models[st.session_state['selected_model']])
-            st.table(dask_sql_context.sql(f"DESCRIBE MODEL {model}").compute().astype(str))
+            if model is not None:
+                st.write(f"Describe {model}")
+                # st.write(dask_sql_context.schema[selected_schema].models[st.session_state['selected_model']])
+                st.table(dask_sql_context.sql(f"DESCRIBE MODEL {model}").compute().astype(str))
         
         elif st.session_state["on_changed_called_on"] == "experiments":
             selected_experiment = st.session_state['selected_experiment']
-            st.write(f"Describe Experiment {selected_experiment}")
-            st.table(dask_sql_context.schema[selected_schema].experiments[selected_experiment].astype(str))
+            if selected_experiment is not None:
+                st.write(f"Describe Experiment {selected_experiment}")
+                st.table(dask_sql_context.schema[selected_schema].experiments[selected_experiment].astype(str))
 
+    with st.expander("HELP 💡"):
+        col1, col2,col3,col4 = st.columns(4)
+
+        with col1:
+            st.markdown(
+                """
+                ##### Create Tables
+
+                1. Refer Python Page for creating tables using dataframe
+                2. Creating Table using SQL statement was not working 
+                without tunning in streamlit and coiled environment.
+                3. But Works like charm when deployed locally because it
+                able to access the data locally
+
+                """)
+            
+        with col2:
+            st.markdown(
+                """
+                ##### Create Python UDFs
+                
+                Refer Python page
+
+                """
+
+            )
+        with col3:
+            st.markdown(
+                """
+                ##### Create ML Models in SQL
+                """
+            )
+            st.code(
+                """
+
+# Make sure the categorical columns
+# are encoded before building model
+# using when statement etc..
+CREATE OR REPLACE MODEL my_model WITH (
+    model_class = 'xgboost.dask.DaskXGBClassifier',
+    target_column = 'species',
+    num_class = 3
+) AS (
+    SELECT * FROM enriched_iris
+)
+            
+                """,
+                language="SQL"
+
+            )
+        with col4:
+            st.markdown(
+                """
+                ##### Create ML Experiments using SQL
+
+                1. Ability to tune Hyperparameter of the model
+                2. AutoML like behaviour using TPOT
+
+                usage: refer [dask-sql-docs](https://dask-sql.readthedocs.io/en/latest/pages/machine_learning.html)
+
+                """
+
+            )    
+            
         
-        
-    
     
     

@@ -1,12 +1,10 @@
 CREATE OR REPLACE TABLE iris
 WITH (
-    location = 'file://./iris.csv',
+    location = 'iris.csv',
     format = 'csv',
     persist = True
     
 );
-
-
 
 select * from iris limit 10;
 
@@ -95,3 +93,4 @@ WITH (
     storage_options={"anon": True},
     blocksize="16 MiB",
 );
+

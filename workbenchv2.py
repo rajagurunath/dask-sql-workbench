@@ -14,24 +14,24 @@ user_want_to= st.sidebar.radio(
     options= [
         "Connections",
         "Settings",
-        "Write SQL",
-        "Explore Schema",
-        "Create Python UDF",
+        "Dask-SQL Workbench",
+        "Explore 🕵️ ",
+        "Python's Nest 🐍🥚",
         "Visualizer"
     ]
 
 )
 
 
-if user_want_to == "Write SQL":
+if user_want_to == "Dask-SQL Workbench":
     write_sql()
 elif user_want_to == "Settings":
     settings()
-elif user_want_to == "Explore Schema":
+elif user_want_to == "Explore 🕵️ ":
     explore_schema()
 elif user_want_to == "Connections":
     connection_page()
-elif user_want_to == "Create Python UDF":
+elif user_want_to == "Python's Nest 🐍🥚":
     create_pyUDF()
 elif user_want_to == "Visualizer":
     visualizer_page()

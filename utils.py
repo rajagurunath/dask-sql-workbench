@@ -19,5 +19,5 @@ def get_settings_default(keys_required):
 def create_required_softwares(packages):
     coiled.create_software_environment(
     name="dask-sql-software",
-    pip=["dask", "xgboost", "dask-sql","dask-ml","tpot","bokeh","pandas","numpy","sklearn"],
+    pip=["dask","s3fs", "xgboost", "dask-sql","dask-ml","tpot","bokeh","pandas","numpy","sklearn"],
     )   
