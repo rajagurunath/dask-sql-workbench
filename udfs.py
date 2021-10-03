@@ -13,8 +13,9 @@ def register_udf(completefn,sql_context):
     try:
         import numpy as np
         import pandas as pd
+        import dask.dataframe as dd
         cfn = compile(completefn,'kernel','exec')
-        eval(cfn,{"__builtins__": {}},{"c":sql_context,"np":np,"pd":pd})
+        eval(cfn,{"__builtins__": {}},{"c":sql_context,"np":np,"pd":pd,"dd":dd})
     except ImportError as e:
         st.error(f"Import statements are minimized for security purpose! {e}")
     except Exception as e:
@@ -37,4 +38,5 @@ def create_pyUDF():
     key="python_ace",
     )
     st.code(python_code,language="python")
-    register_udf(python_code,sql_context=dask_sql_context)
+    if python_code:
+        register_udf(python_code,sql_context=dask_sql_context)

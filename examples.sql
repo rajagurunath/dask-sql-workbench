@@ -3,7 +3,10 @@ WITH (
     location = 'file://./iris.csv',
     format = 'csv',
     persist = True
+    
 );
+
+
 
 select * from iris limit 10;
 
@@ -54,3 +57,41 @@ CREATE OR REPLACE TABLE enriched_iris AS (
         IRIS_VOLUME(sepal_length, sepal_width) AS volume
     FROM iris 
 )
+
+df = dd.read_csv(
+    "s3://nyc-tlc/trip data/yellow_tripdata_2019-*.csv",
+    parse_dates=["tpep_pickup_datetime", "tpep_dropoff_datetime"],
+    dtype={
+        "payment_type": "UInt8",
+        "VendorID": "UInt8",
+        "passenger_count": "UInt8",
+        "RatecodeID": "UInt8",
+        "store_and_fwd_flag": "string",
+        "PULocationID": "UInt16",
+        "DOLocationID": "UInt16",
+    },
+    storage_options={"anon": True},
+    blocksize="16 MiB",
+).persist()
+
+
+c.create_table("trip_data",df)
+
+CREATE OR REPLACE TABLE trip_data
+WITH (
+    location = 's3://nyc-tlc/trip data/yellow_tripdata_2019-*.csv',
+    format = 'csv',
+    persist = True,
+    parse_dates=["tpep_pickup_datetime", "tpep_dropoff_datetime"],
+    dtype={
+        "payment_type": "UInt8",
+        "VendorID": "UInt8",
+        "passenger_count": "UInt8",
+        "RatecodeID": "UInt8",
+        "store_and_fwd_flag": "category",
+        "PULocationID": "UInt16",
+        "DOLocationID": "UInt16",
+    },
+    storage_options={"anon": True},
+    blocksize="16 MiB",
+);

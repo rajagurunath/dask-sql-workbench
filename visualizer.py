@@ -47,7 +47,8 @@ def visualize_table(table):
     key="python_ace",
     )
     st.code(python_code,language="python")
-    st.write(code_visualizer(python_code,dask_sql_context,table))
+    if python_code:
+        st.write(code_visualizer(python_code,dask_sql_context,table))
 
 
 def visualizer_page():

@@ -6,7 +6,7 @@ from dask_sql import Context
 from containers import get_last_few_queries,query_history
 import coiled
 from dask.distributed import Client,LocalCluster
-
+import os
 
 @st.experimental_singleton()
 def get_coiled_client():
@@ -46,7 +46,7 @@ def coiled_dask_cluster():
 		(10)
 	)
 	if st.button("Scale your cluster!"):
-		coiled.Cluster(name='dask-sql-cluster').scale(num_workers)
+		coiled.Cluster(name='dask-sql-cluster',software="dask-sql-software").scale(num_workers)
 	# Option to shutdown cluster
 	st.subheader(
 		"Cluster Hygiene"
@@ -82,12 +82,18 @@ def connection_page():
 								 options=["local-reuse","local-create","coiled-create"],
 
 								 )
+	deployment_type = os.environ.get("deployment_type",None)
+	
 	if local_or_coiled in ["local-reuse","local-create"]:
+		if deployment_type == "streamlit":
+			raise st.StreamlitAPIException("App was deployed in streamlit, for \
+			performance reason local dask clusters cannot be created,Please use Coiled Dask Envrionment")
+		
+
 		client = local_dask_cluster(local_or_coiled)
 	else:
 		client = coiled_dask_cluster()
 		st.write("coiled cluster creation ...")
-		pass
 	
 @st.experimental_singleton()
 def _create_local_client(num_workers):
