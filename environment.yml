@@ -105,7 +105,6 @@ dependencies:
   - libevent=2.1.10
   - libffi=3.3
   - libgd=2.3.2
-  - libgfortran=5.0.0
   - libgfortran5=9.3.0
   - libglib=2.68.4
   - libiconv=1.16
