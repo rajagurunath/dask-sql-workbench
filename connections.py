@@ -7,6 +7,8 @@ from containers import get_last_few_queries,query_history
 import coiled
 from dask.distributed import Client,LocalCluster
 import os
+import dask
+dask.config.set({"coiled.token":st.secrets['token']})
 
 @st.experimental_singleton()
 def get_coiled_client():
