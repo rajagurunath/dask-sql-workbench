@@ -52,3 +52,34 @@ def write_sql():
     with st.expander("Query History"):
         for sql in get_last_few_queries(n_rows=SHOW_HISTORY_LENGTH):
             st.code(sql,language="sql")
+    
+    with st.expander("HELP 💡"):
+        st.subheader("Some SQL snippets")
+
+        st.code(
+            """
+CREATE OR REPLACE TABLE enriched_iris AS (
+    SELECT 
+        sepal_length, sepal_width, petal_length, petal_width,
+        CASE 
+            WHEN species = 'setosa' THEN 0 ELSE CASE 
+            WHEN species = 'versicolor' THEN 1
+            ELSE 2 
+        END END AS "species"
+    FROM iris 
+) 
+            """,language="SQL")
+
+        st.subheader("Hyper parameter tunning")
+        st.code(
+            """
+CREATE EXPERIMENT my_exp WITH (
+    model_class = 'sklearn.ensemble.GradientBoostingClassifier',
+    experiment_class = 'dask_ml.model_selection.GridSearchCV',
+    tune_parameters = (n_estimators = ARRAY [16, 32, 2],learning_rate = ARRAY [0.1,0.01,0.001],
+                        max_depth = ARRAY [3,4,5,10]),
+    target_column = 'species'
+) AS (
+        SELECT * FROM enriched_iris
+    )
+        """,language="SQL")
