@@ -1,3 +1,4 @@
+---
 name: Python Style Check
 on: [push,pull_request]
 
