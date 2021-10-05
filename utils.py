@@ -1,11 +1,14 @@
-import streamlit as st
-from defaults import DEFAULT_SETTINGS
 import coiled
+import streamlit as st
+
+from defaults import DEFAULT_SETTINGS
+
 
 def _get_keys_from_session(key):
     if key in st.session_state:
         return st.session_state[key]
     return None
+
 
 def get_settings_default(keys_required):
     required_values = []
@@ -16,8 +19,20 @@ def get_settings_default(keys_required):
         required_values.append(value)
     return required_values
 
+
 def create_required_softwares(packages):
     coiled.create_software_environment(
-    name="dask-sql-software",
-    pip=["dask","s3fs", "xgboost", "dask-sql","dask-ml","tpot","bokeh","pandas","numpy","sklearn"],
-    )   
+        name="dask-sql-software",
+        pip=[
+            "dask",
+            "s3fs",
+            "xgboost",
+            "dask-sql",
+            "dask-ml",
+            "tpot",
+            "bokeh",
+            "pandas",
+            "numpy",
+            "sklearn",
+        ],
+    )

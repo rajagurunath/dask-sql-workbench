@@ -3,7 +3,7 @@
 
 ### Local usage
 
-#### Create Virtualenv 
+#### Create Virtualenv
 
 - make sure JAVA_HOME was set properly or else use conda env
 ```
@@ -19,4 +19,4 @@ streamlit run workbenchv2.py
 
 ### Help 💡
 
-For most of the Use cases Help was avaialble directly in the application 
+For most of the Use cases Help was avaialble directly in the application

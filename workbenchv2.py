@@ -1,25 +1,25 @@
 import dask_sql
-from pkg_resources import require
 import streamlit as st
+from pkg_resources import require
+
 st.set_page_config(layout="wide")
+from connections import connection_page
 from explore_schemas import explore_schema
 from settings import settings
 from sql_explorer import write_sql
-from connections import connection_page
 from udfs import create_pyUDF
 from visualizer import visualizer_page
 
-user_want_to= st.sidebar.radio(
+user_want_to = st.sidebar.radio(
     "Dask-SQL",
-    options= [
+    options=[
         "Connections",
         "Settings",
         "Dask-SQL Workbench",
         "Explore 🕵️ ",
         "Python's Nest 🐍🥚",
-        "Visualizer"
-    ]
-
+        "Visualizer",
+    ],
 )
 
 

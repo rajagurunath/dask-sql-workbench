@@ -3,7 +3,7 @@ WITH (
     location = 'iris.csv',
     format = 'csv',
     persist = True
-    
+
 );
 
 select * from iris limit 10;
@@ -14,14 +14,14 @@ AS SELECT * FROM iris;
 # test models
 
 CREATE OR REPLACE TABLE enriched_iris AS (
-    SELECT 
+    SELECT
         sepal_length, sepal_width, petal_length, petal_width,
-        CASE 
-            WHEN species = 'setosa' THEN 0 ELSE CASE 
+        CASE
+            WHEN species = 'setosa' THEN 0 ELSE CASE
             WHEN species = 'versicolor' THEN 1
-            ELSE 2 
+            ELSE 2
         END END AS "species"
-    FROM iris 
+    FROM iris
 )
 CREATE OR REPLACE MODEL my_model WITH (
     model_class = 'xgboost.dask.DaskXGBClassifier',
@@ -45,15 +45,15 @@ CREATE EXPERIMENT my_exp WITH (
 
 # functions
 CREATE OR REPLACE TABLE enriched_iris AS (
-    SELECT 
+    SELECT
         sepal_length, sepal_width, petal_length, petal_width,
-        CASE 
-            WHEN species = 'setosa' THEN 0 ELSE CASE 
+        CASE
+            WHEN species = 'setosa' THEN 0 ELSE CASE
             WHEN species = 'versicolor' THEN 1
-            ELSE 2 
-        END END AS "species", 
+            ELSE 2
+        END END AS "species",
         IRIS_VOLUME(sepal_length, sepal_width) AS volume
-    FROM iris 
+    FROM iris
 )
 
 df = dd.read_csv(
@@ -93,4 +93,3 @@ WITH (
     storage_options={"anon": True},
     blocksize="16 MiB",
 );
-

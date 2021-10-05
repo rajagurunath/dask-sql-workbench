@@ -53,3 +53,4 @@ dask_sql/jar
 .next/
 dask-worker-space/
 node_modules/
+.DS_Store

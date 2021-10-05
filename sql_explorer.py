@@ -1,44 +1,47 @@
-from streamlit_ace import st_ace
 import streamlit as st
-from utils import get_settings_default
-from containers import get_last_few_queries,query_history
+from streamlit_ace import st_ace
+
 from connections import get_dask_sql_context
-from defaults import SHOW_HISTORY_LENGTH,SHOW_TABLE_ROWS
+from containers import get_last_few_queries, query_history
+from defaults import SHOW_HISTORY_LENGTH, SHOW_TABLE_ROWS
+from utils import get_settings_default
 
 dask_sql_context = get_dask_sql_context()
 
 
 def write_sql():
-    st.markdown("""
+    st.markdown(
+        """
     ### Dask-SQL Workbench
 
     Use SQL to create Tables, Views,ML Models and Experiments etc.
-    
+
     """
     )
 
-    theme,Keybinding,font_size,tab_size = get_settings_default(
-            ["theme","Keybinding","font_size","tab_size"]
-            )
+    theme, Keybinding, font_size, tab_size = get_settings_default(
+        ["theme", "Keybinding", "font_size", "tab_size"]
+    )
     sql = st_ace(
-    placeholder="Write the SQL statements",
-    language="sql",
-    theme=theme,
-    keybinding=Keybinding,
-    font_size=font_size,
-    tab_size=tab_size,
-    
-    key="ace",
+        placeholder="Write the SQL statements",
+        language="sql",
+        theme=theme,
+        keybinding=Keybinding,
+        font_size=font_size,
+        tab_size=tab_size,
+        key="ace",
     )
 
-    explain = st.button(label="Explain",help="Explain the Query plan to write a Optimized SQL")
+    explain = st.button(
+        label="Explain", help="Explain the Query plan to write a Optimized SQL"
+    )
 
     if sql:
         query_history.append(sql)
 
     if explain:
         if sql:
-            st.code(dask_sql_context.explain(sql),language="text")
+            st.code(dask_sql_context.explain(sql), language="text")
 
     if sql:
         sql_list = sql.split(";")
@@ -51,24 +54,26 @@ def write_sql():
 
     with st.expander("Query History"):
         for sql in get_last_few_queries(n_rows=SHOW_HISTORY_LENGTH):
-            st.code(sql,language="sql")
-    
+            st.code(sql, language="sql")
+
     with st.expander("HELP 💡"):
         st.subheader("Some SQL snippets")
 
         st.code(
             """
 CREATE OR REPLACE TABLE enriched_iris AS (
-    SELECT 
+    SELECT
         sepal_length, sepal_width, petal_length, petal_width,
-        CASE 
-            WHEN species = 'setosa' THEN 0 ELSE CASE 
+        CASE
+            WHEN species = 'setosa' THEN 0 ELSE CASE
             WHEN species = 'versicolor' THEN 1
-            ELSE 2 
+            ELSE 2
         END END AS "species"
-    FROM iris 
-) 
-            """,language="SQL")
+    FROM iris
+)
+            """,
+            language="SQL",
+        )
 
         st.subheader("Hyper parameter tunning")
         st.code(
@@ -82,4 +87,6 @@ CREATE EXPERIMENT my_exp WITH (
 ) AS (
         SELECT * FROM enriched_iris
     )
-        """,language="SQL")
+        """,
+            language="SQL",
+        )
