@@ -5,6 +5,7 @@ import dask
 import streamlit as st
 from dask.distributed import Client, LocalCluster
 from dask_sql import Context, java
+from dask_sql.datacontainer import SchemaContainer
 
 from containers import get_last_few_queries, query_history
 
@@ -76,7 +77,12 @@ def coiled_dask_cluster():
     if client.status == "closed":
         # In a long-running Streamlit app, the cluster could have shut down from idleness.
         # If so, clear the Streamlit cache to restart it.
-        st.caching.clear_cache()
+        # st.caching.clear_cache()
+        dask_sql_context = get_dask_sql_context()
+        dask_sql_context.schema_name = dask_sql_context.DEFAULT_SCHEMA_NAME
+        dask_sql_context.schema = {
+            dask_sql_context.schema_name: SchemaContainer(dask_sql_context.schema_name)
+        }
         cluster_state.write("Starting or connecting to Coiled cluster...")
         client = get_coiled_client()
 
