@@ -17,7 +17,7 @@ if "token" in os.environ:
 @st.experimental_singleton()
 def get_coiled_client():
     cluster = coiled.Cluster(
-        n_workers=10, name="dask-sql-cluster", software="dask-sql-software"
+        n_workers=5, name="dask-sql-cluster", software="dask-sql-software"
     )
     client = Client(cluster)
     return client
@@ -52,7 +52,7 @@ def coiled_dask_cluster():
 		\n Note that scaling a cluster up takes a couple of minutes.
 		"""
     )
-    num_workers = st.slider("Number of workers", 5, 20, (10))
+    num_workers = st.slider("Number of workers", 5, 20, (5))
     if st.button("Scale your cluster!"):
         coiled.Cluster(name="dask-sql-cluster", software="dask-sql-software").scale(
             num_workers
@@ -77,7 +77,7 @@ def coiled_dask_cluster():
     if client.status == "closed":
         # In a long-running Streamlit app, the cluster could have shut down from idleness.
         # If so, clear the Streamlit cache to restart it.
-        # st.caching.clear_cache()
+
         dask_sql_context = get_dask_sql_context()
         dask_sql_context.schema_name = dask_sql_context.DEFAULT_SCHEMA_NAME
         dask_sql_context.schema = {
