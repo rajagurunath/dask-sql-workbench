@@ -90,3 +90,24 @@ CREATE EXPERIMENT my_exp WITH (
         """,
             language="SQL",
         )
+
+        st.subheader("Create Table using dataset from S3 location")
+        st.code(
+            """
+CREATE TABLE trip_data
+    WITH (
+        location = 's3://nyc-tlc/trip data/yellow_tripdata_2019-*.csv',
+        format = 'csv',
+        parse_dates = ARRAY ['tpep_pickup_datetime', 'tpep_dropoff_datetime'],
+        dtype = MAP ['payment_type', 'UInt8',
+                'VendorID', 'UInt8',
+                'passenger_count', 'UInt8',
+                'RatecodeID', 'UInt8',
+                'store_and_fwd_flag', 'string',
+                'PULocationID', 'UInt16',
+                    'DOLocationID', 'UInt16'],
+        storage_options= MAP ['anon','true'],
+        blocksize='16 MiB'
+    )
+    """
+        )
