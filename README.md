@@ -20,3 +20,10 @@ streamlit run workbenchv2.py
 ### Help 💡
 
 For most of the Use cases Help was avaialble directly in the application
+
+
+## Warning:
+
+There is an High probability that this interface can break, use it with no expectations 😅
+
+Tryout the streamlit app here: https://share.streamlit.io/rajagurunath/dask-sql-workbench/main/workbenchv2.py
