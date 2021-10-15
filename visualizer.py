@@ -72,7 +72,7 @@ def visualizer_page():
     selected_table = st.selectbox("Tables", options=tables)
 
     viz_type = st.selectbox(
-        "What you want to do with the data ?", options=["custom viz", "profile"]
+        "What you want to do with the data ?", options=["custom viz", "Data profiling"]
     )
 
     if selected_table is None:
@@ -84,7 +84,7 @@ def visualizer_page():
             .df.head(1000)
         )
 
-        if viz_type == "profile":
+        if viz_type == "Data profiling":
             pr = ProfileReport(dataframe)  # .profile_report()
             st_profile_report(pr)
         elif viz_type == "custom viz":
