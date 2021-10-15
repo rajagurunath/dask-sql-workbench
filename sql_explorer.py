@@ -35,22 +35,38 @@ def write_sql():
     explain = st.button(
         label="Explain", help="Explain the Query plan to write a Optimized SQL"
     )
-
-    if sql:
-        query_history.append(sql)
-
-    if explain:
+    dask_client = st.session_state.get("dask_client", None)
+    if dask_client is None:
+        st.sidebar.error(
+            "Dask client should not be none, please initialize in connection page"
+        )
+    elif dask_client.status == "running":
         if sql:
-            st.code(dask_sql_context.explain(sql), language="text")
+            query_history.append(sql)
 
-    if sql:
-        sql_list = sql.split(";")
-        for _sql in sql_list:
-            _sql = _sql.strip()
-            if _sql:
-                res = dask_sql_context.sql(_sql)
-                if res is not None:
-                    st.table(res.head(SHOW_TABLE_ROWS).astype(str))
+        if explain:
+            if sql:
+                st.code(dask_sql_context.explain(sql), language="text")
+
+        if sql:
+            sql_list = sql.split(";")
+            for _sql in sql_list:
+                _sql = _sql.strip()
+                if _sql:
+                    res = dask_sql_context.sql(_sql)
+                    if res is not None:
+                        st.table(res.head(SHOW_TABLE_ROWS).astype(str))
+    else:
+        st.write(
+            f"Dask client was `{dask_client.status}`, Need to be in `running` \
+                 state to perform computation \
+                 Please start/connect to the dask cluster in connection page"
+        )
+
+        st.sidebar.error(
+            f"Dask client was in `{dask_client.status}`, Need to be in `running` \
+                    state perform computation Please start/connect to the dask cluster in connection page"
+        )
 
     with st.expander("Query History"):
         for sql in get_last_few_queries(n_rows=SHOW_HISTORY_LENGTH):

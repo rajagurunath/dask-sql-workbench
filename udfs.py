@@ -62,8 +62,26 @@ def create_pyUDF():
         key="python_ace",
     )
     st.code(python_code, language="python")
-    if python_code:
-        register_udf(python_code, sql_context=dask_sql_context)
+    dask_client = st.session_state.get("dask_client", None)
+
+    if dask_client is None:
+        st.sidebar.error(
+            "Dask client should not be none, please initialize in connection page"
+        )
+    elif dask_client.status == "running":
+        if python_code:
+            register_udf(python_code, sql_context=dask_sql_context)
+    else:
+        st.write(
+            f"Dask client was `{dask_client.status}`, Need to be in `running` \
+                 state to perform computation \
+                 Please start/connect to the dask cluster in connection page"
+        )
+
+        st.sidebar.error(
+            f"Dask client was in `{dask_client.status}`, Need to be in `running` \
+                    state perform computation Please start/connect to the dask cluster in connection page"
+        )
 
     with st.expander("HELP 💡"):
         st.subheader("Example snippets for UDFs Creation")

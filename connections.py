@@ -108,8 +108,13 @@ def connection_page():
 								 dask cluster or coiled dask cluster",
         options=["local-reuse", "local-create", "coiled-create"],
     )
-    deployment_type = os.environ.get("deployment_type", None)
 
+    dask_client = get_dask_client(local_or_coiled)
+    st.session_state["dask_client"] = dask_client
+
+
+def get_dask_client(local_or_coiled):
+    deployment_type = os.environ.get("deployment_type", None)
     if local_or_coiled in ["local-reuse", "local-create"]:
         if deployment_type == "streamlit":
             raise st.StreamlitAPIException(
@@ -121,6 +126,7 @@ def connection_page():
     else:
         client = coiled_dask_cluster()
         st.write("coiled cluster creation ...")
+    return client
 
 
 @st.experimental_singleton()
