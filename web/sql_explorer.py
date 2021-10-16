@@ -1,9 +1,8 @@
 import streamlit as st
-from streamlit_ace import st_ace
-
 from connections import get_dask_sql_context
 from containers import get_last_few_queries, query_history
 from defaults import SHOW_HISTORY_LENGTH, SHOW_TABLE_ROWS
+from streamlit_ace import st_ace
 from utils import get_settings_default
 
 dask_sql_context = get_dask_sql_context()

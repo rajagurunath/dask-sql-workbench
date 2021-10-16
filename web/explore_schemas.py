@@ -2,7 +2,6 @@ import inspect
 
 import pandas as pd
 import streamlit as st
-
 from connections import get_dask_sql_context
 from defaults import SHOW_TABLE_ROWS
 

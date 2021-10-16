@@ -3,11 +3,10 @@ import os
 import coiled
 import dask
 import streamlit as st
+from containers import get_last_few_queries, query_history
 from dask.distributed import Client, LocalCluster
 from dask_sql import Context, java
 from dask_sql.datacontainer import SchemaContainer
-
-from containers import get_last_few_queries, query_history
 
 if "token" in os.environ:
     token = os.environ.get("token", None)

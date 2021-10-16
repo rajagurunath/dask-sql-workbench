@@ -1,10 +1,9 @@
 import pandas as pd
 import streamlit as st
+from connections import get_dask_sql_context
 from pandas_profiling import ProfileReport
 from streamlit_ace import st_ace
 from streamlit_pandas_profiling import st_profile_report
-
-from connections import get_dask_sql_context
 from utils import get_settings_default
 
 dask_sql_context = get_dask_sql_context()

@@ -1,10 +1,9 @@
 import dask_sql
 import streamlit as st
+from containers import get_last_few_queries, query_history
 from dask_sql import Context, java
 from streamlit.state.session_state import WidgetArgs
 from streamlit_ace import KEYBINDINGS, THEMES, st_ace
-
-from containers import get_last_few_queries, query_history
 from udfs import register_udf, udf_help_text
 
 # from settings import get_settings

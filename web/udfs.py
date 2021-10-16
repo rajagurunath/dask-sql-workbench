@@ -1,7 +1,6 @@
 import streamlit as st
-from streamlit_ace import st_ace
-
 from connections import get_dask_sql_context
+from streamlit_ace import st_ace
 from utils import get_settings_default
 
 udf_help_text = "To more about how to define Python UDF, \

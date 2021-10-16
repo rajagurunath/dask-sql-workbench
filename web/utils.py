@@ -1,6 +1,5 @@
 import coiled
 import streamlit as st
-
 from defaults import DEFAULT_SETTINGS
 
 
