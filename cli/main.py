@@ -176,7 +176,6 @@ class MyApp(App):
 
     async def handle_tree_click(self, message):
         schema_name = message.node.data["schema_name"]
-        # table_name = message.node.data.get("table_name",None)
         schema = self.sql_context.schema[schema_name]
 
         async def load_schema(node):
@@ -192,11 +191,10 @@ class MyApp(App):
                         "is_schema": False,
                     },
                 )
+                node.loaded = True
 
         async def add_sql_table():
-            # schema_name = message.node.data['schema_name']
             table_name = message.node.data.get("table_name", None)
-            # schema = self.sql_context.schema[schema_name]
             is_schema = message.node.data["is_schema"]
 
             if not is_schema:
