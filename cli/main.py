@@ -32,13 +32,16 @@ def make_button(text: str, style: str) -> Button:
     return Button(text, style=style, name=text)
 
 
-def df_to_table(df):
+def df_to_table(df, label="table"):
     df = df.reset_index().rename(columns={"index": ""})
-    label = "table"
+    # label = "table"
     total = df.shape[0]
     columns = df.columns
     table = Table(
-        title=f"{label} ({total} rows)", show_lines=True, expand=True, min_width=280
+        title=f"{label} ({total} rows | {len(columns)-1} columns)",
+        show_lines=True,
+        expand=True,
+        min_width=280,
     )
     # table.add_column("index")
     for col in columns:
@@ -96,7 +99,7 @@ class SQL(Widget):
             self.sql += event.key
 
 
-class MyApp(App):
+class DaskSQLApp(App):
     """Just a test app."""
 
     async def on_load(self, event: events.Load) -> None:
@@ -123,11 +126,21 @@ class MyApp(App):
         try:
             for sql in sqlList:
                 if sql:
-                    df = self.sql_context.sql(sql)
+                    df = self.sql_context.sql(sql.strip("\n"))
             if df is not None:
-                await self.table_box.update(df_to_table(df.compute()))
+                # rel, select_names, _ = self.sql_context._get_ral(sql)
+                # tableName = rel.getTableName()
+                await self.table_box.update(df_to_table(df.compute(), label="SQLTable"))
         except Exception as e:
-            await self.table_box.update(Panel(f"Exception occured {e}"))
+            # await self.table_box.update(Panel(f"Exception occured {e}"))
+            traceback = Traceback(
+                width=250,
+                extra_lines=3,
+                theme=None,
+                word_wrap=False,
+                show_locals=False,
+            )
+            await self.table_box.update(Panel(traceback))
 
     async def on_mount(self, event: events.Mount) -> None:
 
@@ -154,9 +167,6 @@ class MyApp(App):
                     schema_name,
                     {"schema_name": schema_name, "is_schema": True},
                 )
-
-                # await self.schemas.add(1,"table1",{"schema_name":schema_name,"table":"table1"})
-
             await self.schemas.root.expand()
 
             # await self.tables.root.expand()
@@ -167,10 +177,7 @@ class MyApp(App):
         await view.dock(footer, edge="bottom")
         await view.dock(self.schemas, edge="left", size=40, z=1)
         self.schemas.layout_offset_x = -40
-
-        # upper_box = Syntax(self.sql, "SQL", theme="monokai", line_numbers=True,line_range=(1,30))
         sub_view = DockView()
-        # self.ee.update()
         await sub_view.dock(self.sql_box, self.table_box, edge="top")
         await view.dock(sub_view, edge="left")
 
@@ -199,7 +206,9 @@ class MyApp(App):
 
             if not is_schema:
                 table = schema.tables[table_name]
-                await self.table_box.update(df_to_table(table.df.compute()))
+                await self.table_box.update(
+                    df_to_table(table.df.compute(), label=table_name.upper())
+                )
 
             elif not message.node.loaded:
                 await load_schema(message.node)
@@ -207,21 +216,7 @@ class MyApp(App):
             else:
                 await message.node.toggle()
 
-            # if table_name:
-            #     table = schema.tables[table_name]
-            #     await self.table_box.update(df_to_table(table.df.compute()))
-            # else:
-            #     await self.table_box.update("No table Name was choosed")
-
-        # async def add_content():
-        #     schema_name = message.node.data['schema_name']
-        #     table_name = message.node.data.get("table_name",None)
-        #     # table = batch.as_table()
-        #     table = schema.tables[table_name]
-        #     await self.table_box.update(df_to_table(table.df.compute()))
-
-        # await self.call_later(add_content)
         await self.call_later(add_sql_table)
 
 
-MyApp.run(log="textual.log")
+DaskSQLApp.run(title="Dask-SQL-workbench", log="dask-sql-textual.log")
