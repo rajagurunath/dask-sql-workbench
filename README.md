@@ -27,4 +27,3 @@ For most of the Use cases Help was avaialble directly in the application
 There is an High probability that this interface can break, use it with no expectations 😅
 
 Tryout the streamlit app here: https://share.streamlit.io/rajagurunath/dask-sql-workbench/main/web/workbenchv2.py
-
