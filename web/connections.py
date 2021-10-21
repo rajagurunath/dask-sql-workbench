@@ -1,4 +1,5 @@
 import os
+from functools import cache
 
 import coiled
 import dask
@@ -13,7 +14,8 @@ if "token" in os.environ:
     dask.config.set({"coiled.token": token})
 
 
-@st.experimental_singleton()
+# @st.experimental_singleton()
+@st.cache(allow_output_mutation=True)
 def get_coiled_client():
     cluster = coiled.Cluster(
         n_workers=5, name="dask-sql-cluster", software="dask-sql-software"
@@ -22,7 +24,8 @@ def get_coiled_client():
     return client
 
 
-@st.experimental_singleton()
+# @st.experimental_singleton()
+@st.cache(allow_output_mutation=True)
 def get_dask_sql_context():
     # from dask.distributed import Client
     # client = Client()
@@ -38,6 +41,10 @@ def get_dask_sql_context():
 
     # print the JVM path, that should be your java installation
     print(java.jvmpath)
+
+    client = get_coiled_client()
+    if client.status.lower() != "running":
+        pass
 
     return Context()
 
