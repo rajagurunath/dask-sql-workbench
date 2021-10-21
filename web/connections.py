@@ -15,7 +15,7 @@ if "token" in os.environ:
 
 
 # @st.experimental_singleton()
-@st.cache(allow_output_mutation=True)
+# @st.cache(allow_output_mutation=True,ttl=3600)
 def get_coiled_client():
     cluster = coiled.Cluster(
         n_workers=5, name="dask-sql-cluster", software="dask-sql-software"
@@ -25,7 +25,7 @@ def get_coiled_client():
 
 
 # @st.experimental_singleton()
-@st.cache(allow_output_mutation=True)
+# @st.cache(allow_output_mutation=True,ttl=3600)
 def get_dask_sql_context():
     # from dask.distributed import Client
     # client = Client()
@@ -44,7 +44,7 @@ def get_dask_sql_context():
 
     client = get_coiled_client()
     if client.status.lower() != "running":
-        pass
+        client.close()
 
     return Context()
 
@@ -71,15 +71,12 @@ def coiled_dask_cluster():
 		Note that this means that a new cluster will have to be spun up the next time you run the app.
 		"""
     )
-    if st.button("Shutdown Cluster"):
-        st.write(
-            "This functionality is disabled for this public example to ensure a smooth experience for all users."
-        )
 
     cluster_state = st.empty()
 
     cluster_state.write("Starting or connecting to Coiled cluster...")
     client = get_coiled_client()
+
     if client.status == "closed":
         # In a long-running Streamlit app, the cluster could have shut down from idleness.
         # If so, clear the Streamlit cache to restart it.
@@ -91,6 +88,12 @@ def coiled_dask_cluster():
         }
         cluster_state.write("Starting or connecting to Coiled cluster...")
         client = get_coiled_client()
+
+    if st.button("Shutdown Cluster"):
+        st.write(
+            "This functionality is disabled for this public example to ensure a smooth experience for all users."
+        )
+        client.shutdown()
 
     cluster_state.write(
         f"Coiled cluster is up and Running..! ({client.dashboard_link})"
