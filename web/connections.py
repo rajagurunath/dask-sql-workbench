@@ -117,12 +117,15 @@ def connection_page():
         "Do you want to connect to local \
 								 dask cluster or coiled dask cluster",
         options=["local-reuse", "local-create", "coiled-create"],
+        key="local_or_coiled",
     )
 
     dask_client = get_dask_client(local_or_coiled)
 
 
-def get_dask_client(local_or_coiled):
+def get_dask_client(local_or_coiled=None):
+    if local_or_coiled is None:
+        local_or_coiled = st.session_state.get("local_or_coiled", "coiled-create")
     deployment_type = os.environ.get("deployment_type", None)
     if local_or_coiled in ["local-reuse", "local-create"]:
         if deployment_type == "streamlit":
