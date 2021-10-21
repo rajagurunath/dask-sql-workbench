@@ -42,10 +42,10 @@ def get_dask_sql_context():
     # print the JVM path, that should be your java installation
     print(java.jvmpath)
 
-    client = get_dask_client()
+    client = get_dask_client(None)
     if client.status.lower() != "running":  # probably no this condition is not needed
         client.close()
-        client = get_dask_client()
+        client = get_dask_client(None)
 
     return Context()
 
