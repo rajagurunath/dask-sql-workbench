@@ -25,7 +25,7 @@ def get_coiled_client():
 
 
 # @st.experimental_singleton()
-# @st.cache(allow_output_mutation=True,ttl=3600)
+@st.cache(allow_output_mutation=True)
 def get_dask_sql_context():
     # from dask.distributed import Client
     # client = Client()
@@ -42,9 +42,10 @@ def get_dask_sql_context():
     # print the JVM path, that should be your java installation
     print(java.jvmpath)
 
-    client = get_coiled_client()
-    if client.status.lower() != "running":
+    client = get_dask_client()
+    if client.status.lower() != "running":  # probably no this condition is not needed
         client.close()
+        client = get_dask_client()
 
     return Context()
 
@@ -119,7 +120,6 @@ def connection_page():
     )
 
     dask_client = get_dask_client(local_or_coiled)
-    st.session_state["dask_client"] = dask_client
 
 
 def get_dask_client(local_or_coiled):
@@ -135,6 +135,7 @@ def get_dask_client(local_or_coiled):
     else:
         client = coiled_dask_cluster()
         st.write("coiled cluster creation ...")
+    st.session_state["dask_client"] = client
     return client
 
 
