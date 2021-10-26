@@ -92,7 +92,7 @@ def coiled_dask_cluster():
 
     if st.button("Shutdown Cluster"):
         st.write(
-            "This functionality is disabled for this public example to ensure a smooth experience for all users."
+            "This functionality may effect other users, Please handle with care"
         )
         client.shutdown()
 
