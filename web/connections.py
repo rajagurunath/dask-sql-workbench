@@ -91,9 +91,7 @@ def coiled_dask_cluster():
         client = get_coiled_client()
 
     if st.button("Shutdown Cluster"):
-        st.write(
-            "This functionality may effect other users, Please handle with care"
-        )
+        st.write("This functionality may effect other users, Please handle with care")
         client.shutdown()
 
     cluster_state.write(
