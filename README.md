@@ -1,29 +1,55 @@
-# dask-sql-workbench
+# Project Overview
 
+This project utilizes Python along with several popular frameworks and libraries to build data-driven applications. It leverages Django, Flask, and FastAPI for backend development, while Streamlit is used for creating interactive web applications. The project also incorporates Dask for distributed computing and various data science libraries such as Pandas, NumPy, Seaborn, and Matplotlib.
 
-### Local usage
+## Dependencies
 
-#### Create Virtualenv
+The project relies on the following dependencies:
 
-- make sure JAVA_HOME was set properly or else use conda env
-```
-virtualenv -p python3 venv
-source venv/bin/activate
-pip install r requirements.txt
-```
-### start the application:
+- **Pandas Profiling**: For exploratory data analysis.
+- **Streamlit**: For building interactive web apps.
+- **Dask**: For parallel and distributed computing.
+- **Seaborn & Matplotlib**: For data visualization.
+- **XGBoost**: For machine learning tasks.
 
-```
-streamlit run workbenchv2.py
-```
+### Installation
 
-### Help 💡
+To set up the environment, follow these steps:
 
-For most of the Use cases Help was avaialble directly in the application
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-repo.git
+   ```
 
+2. Install dependencies using `pip`:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-## Warning:
+3. Run the application (example for Streamlit):
+   ```bash
+   streamlit run app.py
+   ```
 
-There is an High probability that this interface can break, use it with no expectations 😅
+## Key Features
 
-Tryout the streamlit app here: https://share.streamlit.io/rajagurunath/dask-sql-workbench/main/web/workbenchv2.py
+- **Data Exploration**: Utilizes Pandas Profiling for quick insights into datasets.
+- **Interactive Web Apps**: Built using Streamlit for user-friendly interfaces.
+- **Distributed Computing**: Employs Dask for handling large-scale data processing.
+- **Machine Learning**: Integrates XGBoost for predictive modeling.
+
+## Directory Structure
+
+- `app.py`: Main Streamlit application file.
+- `data/`: Directory for storing datasets.
+- `models/`: Contains machine learning models.
+- `utils/`: Utility functions and helper scripts.
+
+## Contributing
+
+Contributions are welcome! Please ensure your changes adhere to the project's coding standards and include appropriate tests.
+
+## License
+
+This project is licensed under the MIT License.
+
