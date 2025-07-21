@@ -1,29 +1,14 @@
-# dask-sql-workbench
+# Project Description
 
+This project is a data analysis and visualization application built using Python, Django, Flask, and FastAPI frameworks. It utilizes various libraries such as pandas, streamlit, and coiled for data processing and visualization.
 
-### Local usage
+## Installation Instructions
 
-#### Create Virtualenv
+1. Clone the repository: `git clone https://github.com/your-repo.git`
+2. Install dependencies: `pip install -r requirements.txt`
+3. Run the application: `streamlit run app.py`
 
-- make sure JAVA_HOME was set properly or else use conda env
-```
-virtualenv -p python3 venv
-source venv/bin/activate
-pip install r requirements.txt
-```
-### start the application:
+## Usage Examples
 
-```
-streamlit run workbenchv2.py
-```
-
-### Help 💡
-
-For most of the Use cases Help was avaialble directly in the application
-
-
-## Warning:
-
-There is an High probability that this interface can break, use it with no expectations 😅
-
-Tryout the streamlit app here: https://share.streamlit.io/rajagurunath/dask-sql-workbench/main/web/workbenchv2.py
+* Run the application and navigate to `http://localhost:8501` in your web browser.
+* Upload a dataset and explore the visualization options.
